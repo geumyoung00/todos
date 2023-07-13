@@ -1,25 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import Button from '../../UI/Button/Button';
-import './CourseInput.css';
+import Button from "../../UI/Button/Button";
+import "./CourseInput.css";
 
-const CourseInput = props => {
-  const [enteredValue, setEnteredValue] = useState('');
+const CourseInput = (props) => {
+  const [enteredValue, setEnteredValue] = useState("");
 
-  const goalInputChangeHandler = event => {
+  const [isValid, setIsValid] = useState(true);
+
+  const goalInputChangeHandler = (event) => {
     setEnteredValue(event.target.value);
   };
 
-  const formSubmitHandler = event => {
+  const formSubmitHandler = (event) => {
     event.preventDefault();
-    props.onAddGoal(enteredValue);
+    if (enteredValue.trim().length > 0) {
+      setIsValid(true);
+      props.onAddGoal(enteredValue);
+      setEnteredValue("");
+    } else {
+      setIsValid(false);
+    }
+    console.log(enteredValue);
   };
 
   return (
     <form onSubmit={formSubmitHandler}>
-      <div className="form-control">
+      <div className={`form-control ${isValid ? "" : "invalid"}`}>
         <label>Course Goal</label>
-        <input type="text" onChange={goalInputChangeHandler} />
+        <input
+          type="text"
+          value={enteredValue}
+          onChange={goalInputChangeHandler}
+        />
+        { isValid ? "" : <p>내용을 입력해주세요.</p>}
       </div>
       <Button type="submit">Add Goal</Button>
     </form>
